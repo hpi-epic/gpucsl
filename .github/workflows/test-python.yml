@@ -1,0 +1,49 @@
+name: Tests + Coverage Python
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: [self-hosted, Linux, X64, gpu]
+
+    steps:
+      - name: Checkout code
+        uses: nschloe/action-cached-lfs-checkout@v1
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install ./[dev]
+          python3 -m pip install cupy-cuda112
+      - name: Cache Data
+        id: cache-data
+        uses: actions/cache@v2
+        with:
+          path: data
+          key: ${{ runner.os }}-data-v5
+      - name: Download datasets if not cached
+        if: steps.cache-data.outputs.cache-hit != 'true'
+        run: |
+          ./scripts/download-data.sh
+      - name: Lint syntax errors with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+      - name: Install locally
+        run: |
+          python3 -m pip install --editable .
+      - name: Test with pytest
+        run: |
+          pytest --run_slow
+      - name: Calculate Coverage
+        run: |
+          pytest --cov=gpucsl . > pytest-coverage.txt
+      - name: Comment coverage
+        uses: coroo/pytest-coverage-commentator@v1.0.2

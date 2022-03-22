@@ -1,0 +1,19 @@
+
+name: Test CUDA Device Functions
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: [self-hosted, Linux, X64, gpu]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Test with GoogleTest
+      run: |
+        ./scripts/test-cuda.sh

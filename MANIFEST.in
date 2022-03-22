@@ -1,0 +1,1 @@
+recursive-include ./gpucsl/pc/cuda/ **.cu

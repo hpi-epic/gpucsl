@@ -1,0 +1,38 @@
+name: Publish Python distributions to PyPI and TestPyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-n-publish:
+    name: Build and publish Python distributions to TestPyPI and PyPI
+
+    runs-on: [self-hosted, Linux, X64, gpu]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install ./[dev]
+          python3 -m pip install cupy-cuda112
+      - name: Build a binary wheel and a source tarball
+        run: |
+          python3 -m build --sdist --wheel --outdir dist/ .
+      - name: Publish distribution to Test PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+      - name: Test pypi deployment
+        run: |
+          pytest tests/test_gpucsl.py::test_gpucsl_testPyPI --run_testPyPI
+      - name: Publish distribution to PyPI if commit is tagged
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}

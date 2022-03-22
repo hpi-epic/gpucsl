@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+echo "\nLinting Python..."
+./scripts/lint-python.sh
+
+echo "\nLinting CUDA..."
+./scripts/lint-cuda.sh
+
+echo ""

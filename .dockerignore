@@ -1,0 +1,6 @@
+.githooks/**
+.github/**
+.vscode/**
+
+experiments/**
+data/**

@@ -1,0 +1,43 @@
+name: Test Benchmarks (Smoke Tests)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: [self-hosted, Linux, X64, gpu]
+
+    steps:
+      - name: Checkout code
+        uses: nschloe/action-cached-lfs-checkout@v1
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install ./[dev]
+          python3 -m pip install cupy-cuda112
+      - name: Cache Data
+        id: cache-data
+        uses: actions/cache@v2
+        with:
+          path: data
+          key: ${{ runner.os }}-data-v5
+      - name: Download datasets if not cached
+        if: steps.cache-data.outputs.cache-hit != 'true'
+        run: |
+          ./scripts/download-data.sh
+      - name: Install locally
+        run: |
+          python3 -m pip install --editable .
+      - name: Install cupc
+        run: |
+          cd benchmarks && wget https://github.com/benrobby/cupc/archive/refs/heads/master.zip && unzip master.zip && mv cupc-master cupc
+      - name: Run gpucsl, cupc, pcalg, bnlearn benchmarks on "coolingData", "alarm"
+        run: |
+          ./benchmarks/run_benchmarks_smoke_test.sh
