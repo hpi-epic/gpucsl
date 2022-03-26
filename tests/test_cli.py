@@ -1,4 +1,5 @@
 from unittest.mock import MagicMock
+from pytest_mock import MockerFixture
 import pytest
 from gpucsl.cli.cli import gpucsl_cli as rcsl
 from gpucsl.cli.cli_io import force_csv_suffix
