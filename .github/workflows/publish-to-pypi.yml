@@ -32,7 +32,7 @@ jobs:
       - name: Test pypi deployment
         run: |
           pytest tests/test_gpucsl.py::test_gpucsl_testPyPI --run_testPyPI
-      - name: Publish distribution to PyPI if commit is tagged
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+      # - name: Publish distribution to PyPI if commit is tagged
+      #   uses: pypa/gh-action-pypi-publish@master
+      #   with:
+      #     password: ${{ secrets.PYPI_API_TOKEN }}
