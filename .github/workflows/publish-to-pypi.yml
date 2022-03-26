@@ -21,6 +21,16 @@ jobs:
           python3 -m pip install --upgrade pip setuptools wheel
           python3 -m pip install ./[dev]
           python3 -m pip install cupy-cuda112
+      - name: Cache Data
+        id: cache-data
+        uses: actions/cache@v2
+        with:
+          path: data
+          key: ${{ runner.os }}-data-v5
+      - name: Download datasets if not cached
+        if: steps.cache-data.outputs.cache-hit != 'true'
+        run: |
+          ./scripts/download-data.sh
       - name: Build a binary wheel and a source tarball
         run: |
           python3 -m build --sdist --wheel --outdir dist/ .
