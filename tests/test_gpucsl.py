@@ -24,6 +24,17 @@ def assert_folder_exists(path):
     assert os.path.isdir(path)
 
 
+def gpucsl_cli_command(ci_test, dataset_name):
+    dataset_path = (
+        test_dataset_folder / dataset_name / (dataset_name + ".csv")
+    ).absolute()
+    return (
+        f"python3 -m gpucsl {ci_test} "
+        + f"-d {dataset_path} "
+        + f"-o {(test_folder / output_folder).absolute()}"
+    )
+
+
 def assert_gpucsl_execution(
     ci_test: str, dataset_name: str, to_be_generated_files_suffixes
 ):
@@ -32,7 +43,7 @@ def assert_gpucsl_execution(
         python3 -m pip install cupy-cuda112 &&
         python3 -m pip install . &&
         mkdir -p {test_folder} && cd {test_folder} && rm -rf * &&
-        python3 -m gpucsl {ci_test} -d {(test_dataset_folder / dataset_name / (dataset_name + ".csv")).absolute()} -o {(test_folder / output_folder).absolute()}
+        {gpucsl_cli_command(ci_test, dataset_name)}
         """
     )
 
@@ -74,10 +85,10 @@ def test_gpucsl_testPyPI():
         f"""
         python3 -m pip install . &&
         python3 -m pip install cupy-cuda112 &&
-        mkdir -p {test_folder} && cd {test_folder} && rm -f * &&
+        mkdir -p {test_folder} && cd {test_folder} && rm -rf * &&
         python3 -m pip uninstall -y gpucsl &&
         python3 -m pip install -i https://test.pypi.org/simple/ gpucsl &&
-        python3 -m gpucsl
+        {gpucsl_cli_command("--gaussian -l 0", "coolingData")}
         """
     )
 
