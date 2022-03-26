@@ -67,7 +67,7 @@ In case of an edge being deleted on multiple GPUs in the same level (for example
 
 ## How to use with docker
 
-First install Docker (for instructions refer to: https://docs.docker.com/get-docker/)
+First install Docker (for instructions refer to: <https://docs.docker.com/get-docker/>)
 Please remember: you will still need a NVIDIA GPU and the CUDA Toolkit installed to used the Docker image.
 
 The current dockerfiles are written with CUDA version 11.2 as a target. Should your host system have a different version installed
@@ -82,6 +82,7 @@ docker run --runtime=nvidia --gpus all -i -t gpucsl
 ```
 
 If you want to upload/download files from/to the container run (to get the container id look it up by: ```docker container ps```):
+
 ```
 # upload your-file.txt to container from the current directory into the directory where gpucsl is installed
 docker cp your-file.txt container_id:/gpucsl/your-file.txt
@@ -90,15 +91,14 @@ docker cp your-file.txt container_id:/gpucsl/your-file.txt
 docker cp container_id:/gpucsl/your-file.txt your-file.txt
 ```
 
-
 If you want to run the benchmarks:
+
 ```
 docker build --target gpucsl-benchmarks -t benchmarks .
 docker run --runtime=nvidia --gpus all -i -t benchmarks
 ```
 
 ## <a name="CLIdocumentation"></a> Full CLI Documentation
-
 
 The following options are available:
 | Shorthand  |  Longform |  Description |
@@ -154,7 +154,8 @@ The following options are available:
 ### Release a new version using the github action
 
 - Bump the version in setup.cfg and commit your change to main.
-- Go to <https://github.com/hpi-epic/gpucsl/releases> and create a new release (and a git tag for it) with the same name as the version.
+- On this commit, create a new tag (e.g., `git tag v0.0.1` and `git push origin v0.0.1`)
+- Go to <https://github.com/hpi-epic/gpucsl/releases> and create a new release for this tag with the same name as the version.
 - A github action will run on release and first test this deployment on testPyPi and then publish the library to pypi.
 
 ### Manually publish to PyPi
