@@ -6,7 +6,6 @@
 //   authors: Behrooz Zarebavani, Foad Jafarinejad, Matin Hashemi and Saber Salehkaleybar
 //   journal: IEEE Transactions on Parallel and Distributed Systems (TPDS)
 //   https://ieeexplore.ieee.org/document/8823064
-
 // Template parameters and unused function parameters are just to keep the interface uniform for all levels
 // Parameters:
 //     level: level of the CI test
@@ -51,6 +50,10 @@ __global__ void gaussian_ci_level_0(double *C, unsigned short *G, int * /*unused
     }
 }
 
+// Based on: "cuPC: CUDA-based Parallel PC Algorithm for Causal Structure Learning on GPU", 2020
+//   authors: Behrooz Zarebavani, Foad Jafarinejad, Matin Hashemi and Saber Salehkaleybar
+//   journal: IEEE Transactions on Parallel and Distributed Systems (TPDS)
+//   https://ieeexplore.ieee.org/document/8823064
 // Parameters:
 //     level: level of the CI test
 //     n: number of variables in the dataset
