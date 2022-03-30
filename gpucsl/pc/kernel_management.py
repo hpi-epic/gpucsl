@@ -94,6 +94,10 @@ class Kernel(ABC):
         self.is_debug = is_debug
         self.should_log = should_log
 
+        kernel_function_signatures = self.every_accessable_function_signature()
+
+        self.define_module(self.cuda_file(), kernel_function_signatures)
+
     def define_module(self, cuda_file_name: str, name_expressions):
         self.module = get_module(
             cuda_file_name,
@@ -106,6 +110,10 @@ class Kernel(ABC):
         self.module.compile()
 
     @abstractmethod
+    def cuda_file(self):
+        pass 
+
+    @abstractmethod
     def kernel_function_name_for_level(self, level: int) -> str:
         pass
 
@@ -115,6 +123,10 @@ class Kernel(ABC):
 
     def kernel_function_signature_for_level(self, level):
         return f"{self.kernel_function_name_for_level(level)}{self.template_specification_for_level(level)}"
+
+    @abstractmethod
+    def every_accessable_function_signature(self):
+        pass
 
     @abstractmethod
     def grid_and_block_mapping(self, level) -> Tuple[Tuple, Tuple]:
@@ -147,21 +159,24 @@ class CompactKernel(Kernel):
         is_debug: bool = False,
         should_log: bool = False,
     ):
-        super().__init__(is_debug=is_debug, should_log=should_log)
         self.device_count = device_count
         self.variable_count = variable_count
         self.columns_per_device = int(ceil(variable_count / self.device_count))
+        
+        super().__init__(is_debug=is_debug, should_log=should_log)
 
-        # given level does not matter as it is only for interface compliance
-        kernel_function_signatures = [self.kernel_function_signature_for_level(0)]
-
-        self.define_module("helpers/graph_helpers.cu", kernel_function_signatures)
+    def cuda_file(self):
+        return "helpers/graph_helpers.cu"
 
     def kernel_function_name_for_level(self, level: int):
         return "compact"
 
     def template_specification_for_level(self, level: int):
         return f"<{self.variable_count}, {self.columns_per_device}>"
+
+    def every_accessable_function_signature(self):
+        # given level does not matter as it is only for interface compliance
+        return [self.kernel_function_signature_for_level(0)]
 
     # horizontal partitioning of adjacency matrix per device
     def grid_and_block_mapping(self, level: int):
@@ -181,23 +196,26 @@ class GaussianKernel(Kernel):
         is_debug: bool = False,
         should_log: bool = False,
     ):
-        super().__init__(is_debug=is_debug, should_log=should_log)
         self.variable_count = variable_count
         self.device_count = device_count
         self.max_level = max_level
 
-        kernel_function_signatures = [
-            self.kernel_function_signature_for_level(level)
-            for level in range(0, max_level + 1)
-        ]
+        super().__init__(is_debug=is_debug, should_log=should_log)
 
-        self.define_module("gaussian_ci.cu", kernel_function_signatures)
+    def cuda_file(self):
+        return "gaussian_ci.cu"
 
     def kernel_function_name_for_level(self, level: int):
         return "gaussian_ci_level_0" if level == 0 else "gaussian_ci_level_n"
 
     def template_specification_for_level(self, level: int):
         return f"<{level}, {self.variable_count}, {self.max_level}>"
+
+    def every_accessable_function_signature(self):
+        return [
+            self.kernel_function_signature_for_level(level)
+            for level in range(0, self.max_level + 1)
+        ]
 
     def grid_and_block_mapping(self, level: int):
         mapping = None
@@ -223,7 +241,6 @@ class DiscreteKernel(Kernel):
         is_debug: bool = False,
         should_log: bool = False,
     ):
-        super().__init__(is_debug=is_debug, should_log=should_log)
         self.max_level = max_level
         self.variable_count = variable_count
         self.max_dim = max_dim
@@ -238,18 +255,22 @@ class DiscreteKernel(Kernel):
             variable_count, max_level, max_dim, memory_restriction=memory_restriction
         )
 
-        kernel_function_signatures = [
-            self.kernel_function_signature_for_level(level)
-            for level in range(0, max_level + 1)
-        ]
+        super().__init__(is_debug=is_debug, should_log=should_log)
 
-        self.define_module("discrete_ci.cu", kernel_function_signatures)
+    def cuda_file(self):
+        return "discrete_ci.cu"
 
     def kernel_function_name_for_level(self, level: int):
         return "discrete_ci_level_0" if level == 0 else "discrete_ci_level_n"
 
     def template_specification_for_level(self, level: int):
         return f"<{level}, {self.variable_count}, {self.parallel_ci_tests_in_block}, {self.max_dim}, {self.n_observations}, {self.max_level}>"
+
+    def every_accessable_function_signature(self):
+        return [
+            self.kernel_function_signature_for_level(level)
+            for level in range(0, self.max_level + 1)
+        ]
 
     def grid_and_block_mapping(self, level: int):
         if level == 0:
