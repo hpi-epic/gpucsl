@@ -60,7 +60,7 @@ To write your own Kernel Management you want to inherit from the abstract base c
 - grid_and_block_mapping: Defines how your kernel is mapped into grids and blocks
 
 Optional:
-- pre_kernel_launch_check: A hook executed before the raw cupy kernel is accessed and run. Can be used to check if everything is ok before the launch happens. 
+- pre_kernel_launch_check: A hook executed before the raw CuPy kernel is accessed and run. Can be used to check if everything is ok before the launch happens. 
     For example: Can be used to check if the given level is below the max level.
 
 
