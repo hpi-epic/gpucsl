@@ -21,8 +21,8 @@ any of the already existing helper functions and you can reuse code from our dis
 You have to place your cuda files in the gpucsl/pc/cuda or gpucsl/pc/cuda/helpers directories! (otherwise you have to modify
 the compiler_options variable in the get_module function of gpucsl/pc/kernel_management.py like it is done for cuda_dir or cuda_helpers_dir)
 
-Note: If you want you can use templates. As the CUDA code is compiled during the runtime of GPUCSL (!) there are already some 
-runtime informations, like the number of variables, accessible. For more information see the next section.
+Note: If needed, kernels can be templated. Since the CUDA code is compiled during the runtime of GPUCSL (!) there are already some 
+runtime information, like the number of variables, accessible. For more information see the next section.
 
 
 ## Implement your own Kernel Management
