@@ -49,13 +49,12 @@ def warn_against_too_high_memory_consumption_gaussian_pc(max_level: int):
 
     if estimated_memory_consumption > gpu_data["totalGlobalMem"]:
         warning(
-            "if the algorithm does not abort it could be that it tries to allocate to much memory on higher levels and errors. Please consider to set the maximum level manually via the -l/--level flag. "
+            "if the algorithm does not terminate, a possible reason could be running out of memory on higher levels, and errors. Please consider setting the maximum level manually via the -l/--level flag. "
         )
 
 
 def determine_max_level(max_level, data):
     variable_count = data.shape[1]
-
     max_possible_level = variable_count - 2
 
     if max_level is None:
