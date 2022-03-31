@@ -131,14 +131,16 @@ def discover_skeleton_gpu_discrete(
 
 Note: make sure the types you initialize your data with on Python side match the data types the CUDA kernel takes. An example in the template is d_skeleton which is initialized as cp.uint16.
 
-After implementing the kernel discovery you can extend the pc function (`gpucsl/pc/pc.py`). First add your distribution to the DataDistribution enum in the same file. Then in pc test for your DataDistribution and call your skeleton discovery like it is done for _DataDistribution.GAUSSIAN_ or _DataDistribution.DISCRETE_. Depending on whether you need more arguments you have to extend the pc functions argument list. 
+
+After implementing the kernel discovery you can extend the pc function (`gpucsl/pc/pc.py`). First, add your distribution to the DataDistribution enum in the same file. Then in pc test for your DataDistribution and call your skeleton discovery like it is done for _DataDistribution.GAUSSIAN_ or _DataDistribution.DISCRETE_. Depending on whether you need more arguments you have to extend the pc functions argument list. 
+
 As long as you return a correct SkeletonResult from your skeleton discovery you do not need to change anything else. The edge orientation should work.
 
 
 ## Extend CLI (optional) 
 
-Depending on how you want to use GPUCSL you want to extend the CLI (if you just want to call it from python you can ignore this step).
-You mainly have to extend the command line parser (gpucsl/pc/command_line_parser.py) with the arguments you need. The parser 
+Depending on how you want to use GPUCSL you want to extend the CLI (if you just want to call it from Python you can ignore this step).
+You mainly have to extend the command line parser (gpucsl/pc/command_line_parser.py) with the arguments you need. The parser uses the argparse package, so please refer to https://docs.python.org/3/library/argparse.html on how to use it.
 basically used the argparse package, so please refer to https://docs.python.org/3/library/argparse.html on how to use it.
 
 One mandatory step will be to add a new distribution flag (example for distribution flag: gaussian). Then you have to extend the function _gpucsl_cli_ 

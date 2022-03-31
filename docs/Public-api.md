@@ -16,20 +16,20 @@ pc(
 Executes the PC algorithm.
 
 ### Parameters
-- data: The data you want to analyze  
-- data_distribution: Either DataDistribution.DISCRETE or DataDistribution.GAUSSIAN depending on the assumed distribution of your data  
-- max_level: max level until which the pc algorithm will run. Depending on the max level data will get allocated on the GPU, so you want to keep it small to avoid out of memory problems  
-- alpha: Alpha value to do the statistical tests against
+- data: The data to analyze  
+- data_distribution: Either DataDistribution.DISCRETE or DataDistribution.GAUSSIAN depending on the assumed distribution of the data  
+- max_level: max level until which the pc algorithm will run (inclusive). Depending on the max level data structures will get allocated on the GPU, so you want to keep it small to avoid out of memory problems  
+- alpha: Alpha value for the statistical tests
 - kernels: You can compile the kernels that should be used yourself and pass them to the function. Used for time measurements where the compile time should be excluded. Leave None and GPUCSL will compile the kernels for you   
 - is_debug: If set to true kernels will get compiled in debug mode
 - should_log: Sets a macro 'LOG' while compiling the CUDA kernels. Can be used for custom logging from kernels  
-- devices: Which gpus should be used.  
-- sync_device: Which of the given (sync_device has to be part of devices!) should be used to sync state while using multiple gpus
+- devices: Device IDs of GPUs to be used.  
+- sync_device: Device ID of the GPU used for state synchronization in the multi GPU case (Notice: sync_device has to be in the devices list!)
   gaussian_correlation_matrix: A correlation matrix can be passed so time measurements do not inlcude the calculation. Only possible when using DataDistribution.GAUSSIAN. If None given GPUCSL calculates it itself.  
 
 ### Returns
 
-The CPDAG that results from causal structure learning on your data, the separation sets, the maximum p values and some times regarding the execution of the pc algorithm.
+The CPDAG that results from causal structure learning on your data, the separation sets, the maximum p values, and time measurements for the skeleton discovery and edge orientation of the pc algorithm, as well as time measurement for the execution of the kernels.
 
 ### Return Value
 - PCResult
