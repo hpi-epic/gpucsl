@@ -186,4 +186,5 @@ class DiscretePC(PC):
         return discover_skeleton_gpu_discrete_using_config
 
     def set_distribution_specific_options(self, max_memory_size=None):
+        # Todo: change
         self.max_memory_size = max_memory_size

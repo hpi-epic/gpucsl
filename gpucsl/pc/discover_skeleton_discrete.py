@@ -29,9 +29,8 @@ def discover_skeleton_gpu_discrete(
     max_level: int,
     num_variables: int,
     num_observations: int,
-    max_memory_size: int = None,
     kernels=None,
-    memory_restriction=None,
+    memory_restriction: int = None,
     is_debug: bool = False,
     should_log: bool = False,
 ) -> SkeletonResult:
@@ -69,8 +68,7 @@ def discover_skeleton_gpu_discrete(
 
     log_time("Kernel compiling", timer() - start)
 
-    if max_memory_size is None:
-        max_memory_size = kernels.ci_test.max_memory_size
+    max_memory_size = kernels.ci_test.max_memory_size
 
     # Allocate memory for contigency tables
     log(f"Allocate {bytes_to_giga_bytes(max_memory_size)}GB of memory")
