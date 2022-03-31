@@ -32,7 +32,7 @@ Otherwise encapsulates details of the underlying CuPy library (which CUDA file t
 
 To write your own Kernel Management you want to inherit from the abstract base class Kernel. You then have to implement the following methods:
 
-- __init__: With the __init__ method you take the paramters you need for everything involved into your kernel management. So if you need something to calculate your grid and block mapping you need to take this parameters here. At a minimum you have to take the paramters is_debug and should_log.
+- __init__: With the __init__ method you take the parameters you need for everything involved into your Kernel Management. So if you need something to calculate your grid and block mapping you need to take these parameters here. At a minimum, you have to take the parameters is_debug and should_log.
   A template for an __init__ method is:
   ```
   def __init__(
