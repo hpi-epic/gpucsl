@@ -55,7 +55,7 @@ To write your own Kernel Management you want to inherit from the abstract base c
         self.define_module("gaussian_ci.cu", kernel_function_signatures)
   ```    
 - kernel_function_name_for_level: Return the name of the kernel for the given level. Can return different names for different levels (as you maybe have written 
-    optimizations for a specific level in form of an extra CUDA function, like we did for DiscreteKernel. Otherwise you can also return just a static name like the CompactKernel)
+    optimizations for a specific level in form of an extra CUDA function, as we did for DiscreteKernel. Otherwise, you can also return just a static name like the CompactKernel)
 - template_specification_for_level: If you templated your kernel in the CUDA code CuPy needs the filled-out template to access the instantiated functions. Here you provide a string with the parameters you give the template for the current level.
 - grid_and_block_mapping: Defines how your kernel is mapped into grids and blocks
 
