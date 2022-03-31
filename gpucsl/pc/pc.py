@@ -64,7 +64,7 @@ def determine_max_level(max_level, data):
         warning(
             f"You set the max level to {max_level}, but the biggest possible level is {possible_max_level}. The pc algorithm will at a maximum only run until level {possible_max_level}."
         )
-        max_level = possible_max_level  # we never run more than possible_max_level and we want to keep it small so we do not have to allocate too much unnecessary memory
+        max_level = possible_max_level  # The PC algorithm cannot have more than possible_max_level levels; high max_level values can lead to the out of memory errors
 
     if max_level is None:
         max_level = possible_max_level
