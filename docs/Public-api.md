@@ -20,7 +20,7 @@ Executes the PC algorithm.
 - data: The data to analyze  
 - data_distribution: Either DataDistribution.DISCRETE or DataDistribution.GAUSSIAN depending on the assumed distribution of the data  
 - max_level: max level until which the pc algorithm will run. Depending on the max level data will get allocated on the GPU, so you want to keep it small to avoid out of memory problems  
-- alpha: Alpha value to do the statistical tests against
+- alpha: Alpha value for the statistical tests
 - kernels: You can compile the kernels that should be used yourself and pass them to the function. Used for time measurements where the compile time should be excluded. Leave None and GPUCSL will compile the kernels for you   
 - is_debug: If set to true kernels will get compiled in debug mode
 - should_log: Sets a macro 'LOG' while compiling the CUDA kernels. Can be used for custom logging from kernels  
