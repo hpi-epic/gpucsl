@@ -31,7 +31,7 @@ Executes the PC algorithm.
 
 ### Returns
 
-The CPDAG that results from causal structure learning on your data, the separation sets, the maximum p values and some times regarding the execution of the pc algorithm.
+The CPDAG that results from causal structure learning on your data, the separation sets, the maximum p values, and time measurements for the skeleton discovery and edge orientation of the pc algorithm, as well as time measurement for the execution of the kernels.
 
 ### Return Value
 - PCResult
