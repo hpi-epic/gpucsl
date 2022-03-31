@@ -1,6 +1,6 @@
 # How to extend GPUCSL by a new distribution
 
-This is a guide on how you can embed your own implementation of an CI algorithm. 
+This is a guide on how you can embed your own implementation of a CI algorithm. 
 
 Testing your code is optional, but highly recommended. This project supports multiple types of tests:
 - Python tests via pytest. They target the python code you write.
