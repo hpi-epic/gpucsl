@@ -4,7 +4,7 @@ This is a guide on how you can embed your own implementation of a CI algorithm.
 
 Testing your code is optional, but highly recommended. This project supports multiple types of tests:
 - Python tests via pytest. They target the Python code you write.
-- CUDA tests from python. They target your CUDA code callable from python (prefixed by __global__ and with return value void).
+- CUDA tests from python. They target your CUDA code callable from Python (prefixed by __global__ and with return value void).
     They enable you to prepare your data with python packages like numpy so you can make clearer what you are testing (example 
     data + call in numpy instead of randomly, externally generated input that you hardcode)
 - Google test: Enables to test CUDA code not covered by the previous point or if you simply prefer to test your CUDA in C++
