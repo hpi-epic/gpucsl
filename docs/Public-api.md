@@ -27,7 +27,7 @@ Executes the PC algorithm.
 - devices: Which gpus should be used.  
 - sync_device: Which of the given (sync_device has to be part of devices!) should be used to sync state while using multiple gpus
   gaussian_correlation_matrix: A correlation matrix can be passed so time measurements do not inlcude the calculation. Only possible when using DataDistribution.GAUSSIAN. If None given GPUCSL calculates it itself.  
-- discrete_max_memory_size: Todo Dominik
+- discrete_max_memory_size: The maximum space to allocate for the working structures for the discrete kernel in bytes. Small values decrease the parallelisation. If None given defaults to 95% of the total available memory on GPU. 
 
 ### Returns
 
@@ -82,9 +82,8 @@ discover_skeleton_gpu_discrete(
     max_level: int,
     num_variables: int,
     num_observations: int,
-    max_memory_size: int = None,
     kernels=None,
-    memory_restriction=None,
+    memory_restriction: int = None,
     is_debug: bool = False,
     should_log: bool = False,
 ) -> SkeletonResult
@@ -98,9 +97,8 @@ Does the skeleton discovery using a conditional independence test for a discrete
 - max_level: max level until which the pc algorithm will run. Depending on the max level data will get allocated on the GPU, so you want to keep it small to avoid out of memory problems  
 - num_variables: The number of variables contained in data
 - num_observations: How many observations every of the variables has
-- max_memory_size: Todo Dominik
 - kernels:  You can compile the kernels that should be used yourself and pass them to the function. Used for time measurements where the compile time should be   excluded. Leave None and GPUCSL will compile the kernels for you   
-- memory_restriction: Todo Dominik
+- memory_restriction: The maximum space to allocate for the working structures. Small values decrease the parallelisation. If None given defaults to 95% of the total available memory on GPU.
 - is_debug: If set to true kernels will get compiled in debug mode
 - should_log: Sets a macro 'LOG' while compiling the CUDA kernels. Can be used for custom logging from kernels  
 
