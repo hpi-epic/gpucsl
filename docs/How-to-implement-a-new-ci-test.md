@@ -18,7 +18,7 @@ Now following are the necessary steps for making a new distribution accessible i
 This is the part we can help you with the least. You have to design efficient CUDA kernel code. While doing so you can use 
 any of the already existing helper functions and you can reuse code from our distributions however you like.
 
-You have to place your cuda files in the gpucsl/pc/cuda or gpucsl/pc/cuda/helpers directories! (otherwise you have to modify
+You have to place your CUDA files in the gpucsl/pc/cuda or gpucsl/pc/cuda/helpers directories! (otherwise, you have to modify
 the compiler_options variable in the get_module function of gpucsl/pc/kernel_management.py like it is done for cuda_dir or cuda_helpers_dir)
 
 Note: If needed, kernels can be templated. Since the CUDA code is compiled during the runtime of GPUCSL (!) there are already some 
