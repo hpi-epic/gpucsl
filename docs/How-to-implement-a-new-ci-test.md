@@ -137,8 +137,8 @@ As long as you return a correct SkeletonResult from your skeleton discovery you 
 
 ## Extend CLI (optional) 
 
-Depending on how you want to use GPUCSL you want to extend the CLI (if you just want to call it from python you can ignore this step).
-You mainly have to extend the command line parser (gpucsl/pc/command_line_parser.py) with the arguments you need. The parser 
+Depending on how you want to use GPUCSL you want to extend the CLI (if you just want to call it from Python you can ignore this step).
+You mainly have to extend the command line parser (gpucsl/pc/command_line_parser.py) with the arguments you need. The parser uses the argparse package, so please refer to https://docs.python.org/3/library/argparse.html on how to use it.
 basically used the argparse package, so please refer to https://docs.python.org/3/library/argparse.html on how to use it.
 
 One mandatory step will be to add a new distribution flag (example for distribution flag: gaussian). Then you have to extend the function `gpucsl_cli` 
