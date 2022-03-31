@@ -17,7 +17,7 @@ pc(
 Executes the PC algorithm.
 
 ### Parameters
-- data: The data you want to analyze  
+- data: The data to analyze  
 - data_distribution: Either DataDistribution.DISCRETE or DataDistribution.GAUSSIAN depending on the assumed distribution of the data  
 - max_level: max level until which the pc algorithm will run. Depending on the max level data will get allocated on the GPU, so you want to keep it small to avoid out of memory problems  
 - alpha: Alpha value to do the statistical tests against
