@@ -44,7 +44,7 @@ To write your own Kernel Management you want to inherit from the abstract base c
         super().__init__(is_debug=is_debug, should_log=should_log)
         self.your_choosen_parameters = your_choosen_parameters
 
-        # calculate all the kernel function signature names you later on want to be able to call (something needed by cupy)
+        # calculate all the kernel function signature names you later on want to be able to call (something needed by CuPy)
         # has to be an array, but if you only need one signature you can change this to be an array with one entry
         kernel_function_signatures = [
             self.kernel_function_signature_for_level(level)
