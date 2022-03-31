@@ -36,6 +36,7 @@ The CPDAG that results from causal structure learning on your data, the separati
 ### Return Value
 - PCResult
 
+<br/><br/>
 ## discover_skeleton_gpu_gaussian (gpucsl/pc/discover_skeleton_gaussian.py)
 discover_skeleton_gpu_gaussian(skeleton: np.ndarray,
 data: np.ndarray,
@@ -73,6 +74,8 @@ A SkeletonResult wrapped into TimedReturn. This represents the resulting undirec
 ### Return Value
 - SkeletonResult
 
+
+<br/><br/>
 ## discover_skeleton_gpu_discrete (gpucsl/pc/discover_skeleton_dicrete.py)
 
 discover_skeleton_gpu_discrete(
@@ -109,6 +112,7 @@ A SkeletonResult wrapped into TimedReturn. This represents the resulting undirec
 ### Return Value
 - SkeletonResult
 
+<br/><br/>
 ## orient_edges (gpucsl/pc/edge_orientation/edge_orientation.py)
 
 orient_edges(
