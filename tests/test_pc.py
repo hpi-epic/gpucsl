@@ -1,5 +1,5 @@
 import numpy as np
-from gpucsl.pc.pc import DataDistribution, pc
+from gpucsl.pc.pc import GaussianPC
 from gpucsl.pc.helpers import correlation_matrix_of
 from gpucsl.pc.kernel_management import Kernels
 from tests.equality import check_graph_equality, graph_equality_isomorphic
@@ -23,7 +23,9 @@ def test_pc(input_data: Fixture):
 
     max_level = 3
 
-    (res, _) = pc(data, DataDistribution.GAUSSIAN, max_level, alpha)
+    pc = GaussianPC(data, max_level, alpha)
+    pc.set_distribution_specific_options()
+    (res, _) = pc.execute()
 
     assert check_graph_equality(
         expected_graph, res.directed_graph, graph_equality_isomorphic
@@ -39,6 +41,7 @@ def test_pc(input_data: Fixture):
 @pytest.mark.parametrize("input_data", ["coolingData"], indirect=True)
 def test_pc_interface(monkeypatch, input_data: Fixture, devices: List[int]):
     monkeypatch.setattr(cp.cuda, "Device", MockDevice)
+    monkeypatch.setattr(cp.cuda.runtime, "getDeviceCount", lambda: 2)
     n_devices = len(devices)
 
     data = input_data.samples
@@ -53,15 +56,18 @@ def test_pc_interface(monkeypatch, input_data: Fixture, devices: List[int]):
         for _ in range(n_devices)
     ]
 
-    result = pc(
+    pc = GaussianPC(
         data,
-        DataDistribution.GAUSSIAN,
         max_level,
         alpha,
-        gaussian_correlation_matrix=correlation_matrix,
         kernels=kernels,
-        devices=devices,
     )
+
+    pc.set_distribution_specific_options(
+        correlation_matrix=correlation_matrix, devices=devices
+    )
+
+    result = pc.execute()
 
     res = result.result
 
@@ -87,14 +93,16 @@ def test_pc_runtime_with_supplied_kernels(input_data):
     correlation_matrix = correlation_matrix_of(data)
     kernels = [Kernels.for_gaussian_ci(data.shape[1], 1, max_level)]
 
-    (_, full_runtime) = pc(
+    pc = GaussianPC(
         data,
-        DataDistribution.GAUSSIAN,
         max_level,
         alpha,
         kernels,
-        gaussian_correlation_matrix=correlation_matrix,
     )
+    pc.set_distribution_specific_options(correlation_matrix=correlation_matrix)
+
+    (_, full_runtime) = pc.execute()
+
     print(f"pc duration: {full_runtime}")
 
     assert False
@@ -112,9 +120,14 @@ def test_pc_runtime_without_supplied_kernels(input_data):
 
     correlation_matrix = correlation_matrix_of(data)
 
-    (_, full_runtime) = pc(
-        data, DataDistribution.GAUSSIAN, max_level, alpha, correlation_matrix
+    pc = GaussianPC(
+        data,
+        max_level,
+        alpha,
     )
+    pc.set_distribution_specific_options(correlation_matrix=correlation_matrix)
+
+    (_, full_runtime) = pc.execute()
     print(f"pc duration: {full_runtime}")
 
     assert False

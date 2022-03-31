@@ -1,5 +1,5 @@
 from math import ceil, floor
-from typing import Tuple, Callable
+from typing import Tuple, Callable, List
 import cupy as cp
 from pathlib import Path
 import math
@@ -110,8 +110,8 @@ class Kernel(ABC):
         self.module.compile()
 
     @abstractmethod
-    def cuda_file(self):
-        pass 
+    def cuda_file(self) -> str:
+        pass
 
     @abstractmethod
     def kernel_function_name_for_level(self, level: int) -> str:
@@ -121,11 +121,11 @@ class Kernel(ABC):
     def template_specification_for_level(self, level: int) -> str:
         pass
 
-    def kernel_function_signature_for_level(self, level):
+    def kernel_function_signature_for_level(self, level) -> str:
         return f"{self.kernel_function_name_for_level(level)}{self.template_specification_for_level(level)}"
 
     @abstractmethod
-    def every_accessable_function_signature(self):
+    def every_accessable_function_signature(self) -> List[str]:
         pass
 
     @abstractmethod
@@ -162,19 +162,19 @@ class CompactKernel(Kernel):
         self.device_count = device_count
         self.variable_count = variable_count
         self.columns_per_device = int(ceil(variable_count / self.device_count))
-        
+
         super().__init__(is_debug=is_debug, should_log=should_log)
 
-    def cuda_file(self):
+    def cuda_file(self) -> str:
         return "helpers/graph_helpers.cu"
 
-    def kernel_function_name_for_level(self, level: int):
+    def kernel_function_name_for_level(self, level: int) -> str:
         return "compact"
 
-    def template_specification_for_level(self, level: int):
+    def template_specification_for_level(self, level: int) -> str:
         return f"<{self.variable_count}, {self.columns_per_device}>"
 
-    def every_accessable_function_signature(self):
+    def every_accessable_function_signature(self) -> List[str]:
         # given level does not matter as it is only for interface compliance
         return [self.kernel_function_signature_for_level(0)]
 
@@ -202,16 +202,16 @@ class GaussianKernel(Kernel):
 
         super().__init__(is_debug=is_debug, should_log=should_log)
 
-    def cuda_file(self):
+    def cuda_file(self) -> str:
         return "gaussian_ci.cu"
 
-    def kernel_function_name_for_level(self, level: int):
+    def kernel_function_name_for_level(self, level: int) -> str:
         return "gaussian_ci_level_0" if level == 0 else "gaussian_ci_level_n"
 
-    def template_specification_for_level(self, level: int):
+    def template_specification_for_level(self, level: int) -> str:
         return f"<{level}, {self.variable_count}, {self.max_level}>"
 
-    def every_accessable_function_signature(self):
+    def every_accessable_function_signature(self) -> List[str]:
         return [
             self.kernel_function_signature_for_level(level)
             for level in range(0, self.max_level + 1)
@@ -257,16 +257,16 @@ class DiscreteKernel(Kernel):
 
         super().__init__(is_debug=is_debug, should_log=should_log)
 
-    def cuda_file(self):
+    def cuda_file(self) -> str:
         return "discrete_ci.cu"
 
-    def kernel_function_name_for_level(self, level: int):
+    def kernel_function_name_for_level(self, level: int) -> str:
         return "discrete_ci_level_0" if level == 0 else "discrete_ci_level_n"
 
-    def template_specification_for_level(self, level: int):
+    def template_specification_for_level(self, level: int) -> str:
         return f"<{level}, {self.variable_count}, {self.parallel_ci_tests_in_block}, {self.max_dim}, {self.n_observations}, {self.max_level}>"
 
-    def every_accessable_function_signature(self):
+    def every_accessable_function_signature(self) -> List[str]:
         return [
             self.kernel_function_signature_for_level(level)
             for level in range(0, self.max_level + 1)

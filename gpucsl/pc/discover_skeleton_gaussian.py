@@ -126,7 +126,7 @@ def discover_skeleton_gpu_gaussian(
     is_debug: bool = False,
     should_log: bool = False,
     devices: List[int] = [0],
-    sync_device: int = None,
+    sync_device: int = 0,
 ) -> SkeletonResult:
 
     thresholds = get_gaussian_thresholds(data, alpha)

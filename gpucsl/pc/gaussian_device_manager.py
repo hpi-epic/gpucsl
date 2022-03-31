@@ -60,7 +60,7 @@ class GaussianDeviceManager:
         num_observations: int,
         max_level: int,
         devices: List[int],
-        sync_device: int = None,
+        sync_device: int = 0,
         kernels: Kernels = None,
         is_debug: bool = False,
         should_log: bool = False,
@@ -84,9 +84,7 @@ class GaussianDeviceManager:
         self._initialize_kernels()
 
     def _initialize_sync_device_index_ressources(self):
-        self.sync_device_index = (
-            self.devices.index(self.sync_device) if self.sync_device is not None else 0
-        )
+        self.sync_device_index = self.devices.index(self.sync_device)
         assert (self.sync_device_index >= 0) and (
             self.sync_device_index < self.n_devices
         ), "Invalid sync_device_index value"
