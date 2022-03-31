@@ -13,26 +13,23 @@ from gpucsl.cli.cli_util import error, warning
 import cupy as cp
 
 
-def validate_given_devices(gpus, sync_device):
+def validate_given_devices(devices, sync_device):
     max_gpu_count = cp.cuda.runtime.getDeviceCount()
 
-    print("----------------")
-    print(max_gpu_count, gpus, sync_device)
-
-    if len(gpus) < 1 or len(gpus) > max_gpu_count:
+    if len(devices) < 1 or len(devices) > max_gpu_count:
         error(
-            f"GPU count should be between 1 and {max_gpu_count}. You specified: {len(gpus)}"
+            f"GPU count should be between 1 and {max_gpu_count}. You specified: {len(devices)}"
         )
 
-    for gpu_index in gpus:
+    for gpu_index in devices:
         if gpu_index < 0 or gpu_index >= max_gpu_count:
             error(
                 f"Specified gpu indices should be between 0 and {max_gpu_count - 1}. You specified: {gpu_index}"
             )
 
-    if sync_device not in gpus:
+    if sync_device is not None and sync_device not in devices:
         error(
-            f"The sync device has to be one of the specified gpus. You gave gpus: {', '.join(gpus)} and sync device: {sync_device}"
+            f"The sync device has to be one of the specified gpus. You gave gpus: {', '.join(devices)} and sync device: {sync_device}"
         )
 
 
@@ -59,18 +56,19 @@ def warn_against_too_high_memory_consumption_gaussian_pc(max_level: int):
 def determine_max_level(max_level, data):
     variable_count = data.shape[1]
 
-    possible_max_level = variable_count - 2
-    if max_level is not None and max_level > possible_max_level:
-        warning(
-            f"You set the max level to {max_level}, but the biggest possible level is {possible_max_level}. The pc algorithm will at a maximum only run until level {possible_max_level}."
-        )
-        max_level = possible_max_level  # we never run more than possible_max_level and we want to keep it small so we do not have to allocate too much unnecessary memory
+    max_possible_level = variable_count - 2
 
     if max_level is None:
-        max_level = possible_max_level
+        max_level = max_possible_level
 
         if max_level < 0:
             error(f"Max level should be >= 0. Your input: {max_level}")
+
+    if max_level > max_possible_level:
+        warning(
+            f"You set the max level to {max_level}, but the biggest possible level is {max_possible_level}. The pc algorithm will at a maximum only run until level {max_possible_level}."
+        )
+        max_level = max_possible_level  # we never run more than possible_max_level and we want to keep it small so we do not have to allocate too much unnecessary memory
 
     return max_level
 
@@ -155,7 +153,7 @@ class GaussianPC(PC):
     def set_distribution_specific_options(
         self,
         devices: List[int] = [0],
-        sync_device: int = 0,
+        sync_device: int = None,
         correlation_matrix: np.ndarray = None,
     ):
         warn_against_too_high_memory_consumption_gaussian_pc(self.max_level)

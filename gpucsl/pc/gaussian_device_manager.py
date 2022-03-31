@@ -7,8 +7,6 @@ from typing import List, Tuple, Callable
 from gpucsl.pc.helpers import transform_to_pmax_cupy, postprocess_pmax_cupy, timed
 from gpucsl.pc.kernel_management import (
     Kernels,
-    KernelGetter,
-    KernelLauncher,
 )
 
 WorkerFunction = Callable[
@@ -60,7 +58,7 @@ class GaussianDeviceManager:
         num_observations: int,
         max_level: int,
         devices: List[int],
-        sync_device: int = 0,
+        sync_device: int = None,
         kernels: Kernels = None,
         is_debug: bool = False,
         should_log: bool = False,
@@ -84,7 +82,9 @@ class GaussianDeviceManager:
         self._initialize_kernels()
 
     def _initialize_sync_device_index_ressources(self):
-        self.sync_device_index = self.devices.index(self.sync_device)
+        self.sync_device_index = (
+            self.devices.index(self.sync_device) if self.sync_device is not None else 0
+        )
         assert (self.sync_device_index >= 0) and (
             self.sync_device_index < self.n_devices
         ), "Invalid sync_device_index value"
