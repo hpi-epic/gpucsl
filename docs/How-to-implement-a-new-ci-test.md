@@ -69,7 +69,7 @@ The implemented kernel will be used in the next step.
 
 ## Implement your own skeleton discovery
 
-Following is a template you can use for the skeleton discovery. Just copy and adapt it tho your special use case. 
+Following is a template you can use for the skeleton discovery. Just copy and adapt it to your special use case. 
 
 ```
 @timed
