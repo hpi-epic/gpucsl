@@ -28,7 +28,6 @@ def pc(
     devices: List[int] = [0],
     sync_device: int = None,
     gaussian_correlation_matrix: np.ndarray = None,
-    discrete_max_memory_size=None,
 ) -> PCResult:
     num_variables = data.shape[1]
     num_observations = data.shape[0]
@@ -70,7 +69,6 @@ def pc(
             num_variables,
             num_observations,
             kernels=kernels,
-            max_memory_size=discrete_max_memory_size,
             is_debug=is_debug,
             should_log=should_log,
         )
