@@ -51,7 +51,7 @@ To write your own Kernel Management you want to inherit from the abstract base c
             for level in range(0, max_level + 1)
         ]
 
-        # pass the kernel function signatures and compile the cuda code
+        # pass the kernel function signatures and compile the CUDA code
         self.define_module("gaussian_ci.cu", kernel_function_signatures)
   ```    
 - kernel_function_name_for_level: Return the name of the kernel for the given level. Can return different names for different levels (as you maybe have written 
