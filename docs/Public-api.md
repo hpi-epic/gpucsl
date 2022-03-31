@@ -68,7 +68,7 @@ Performs the skeleton discovery using a conditional independence test for a mult
 
 
 ### Returns
-A SkeletonResult wrapped into TimedReturn. This represents the resulting undirected graph, helper structures as the separation sets, that are needed for the edge orientation, and times of how long the execution took.
+A SkeletonResult wrapped into TimedReturn. This represents the resulting undirected graph, helper structures as the separation sets (which are needed for the edge orientation), and execution time.
 
 ### Return Value
 - SkeletonResult
