@@ -36,10 +36,13 @@ def gpucsl_cli(command_line_arguments):
 
     sync_device = args.sync_device
     gpus = args.gpus
-    max_gpu_count = cp.cuda.runtime.getDeviceCount()
 
     is_gaussian = args.gaussian
     is_discrete = args.discrete
+
+    max_gpu_count = cp.cuda.runtime.getDeviceCount() if is_gaussian else 1
+    if gpus is None:
+        gpus = [i for i in range(max_gpu_count)]
 
     if is_gaussian + is_discrete != 1:
         error("Please set exactly one of the options --gaussian/--discrete")
@@ -54,8 +57,7 @@ def gpucsl_cli(command_line_arguments):
             "Multi GPU independece test currently only supported for gaussian independece test"
         )
 
-    if gpus is None:
-        gpus = [i for i in range(max_gpu_count)]
+    
 
     data = read_csv(dataset)
 
