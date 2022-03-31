@@ -27,10 +27,10 @@ runtime information, like the number of variables, accessible. For more informat
 
 ## Implement your own Kernel Management
 
-The Kernel Management encapsulates the details of kernel access, for example the grid and block mapping of the kernel is defined here.
-Otherwise encapsulates details of the underlying cupy libraray (which cuda file to read, it compiles the code on creation of the class, function name resulution to level). 
+The Kernel Management encapsulates the details of kernel access, for example, the grid and block mapping of the kernel is defined here.
+Otherwise encapsulates details of the underlying CuPy library (which CUDA file to read, it compiles the code on the creation of the class, function name resolution to level). 
 
-To write your own you want inherit from the abstract base class Kernel. You then have to implement the following methods:
+To write your own Kernel Management you want to inherit from the abstract base class Kernel. You then have to implement the following methods:
 
 - __init__: With the __init__ method you take the paramters you need for everything involved into your kernel management. So if you need something to calculate your grid and block mapping you need to take this parameters here. At a minimum you have to take the paramters is_debug and should_log.
   A template for an __init__ method is:
