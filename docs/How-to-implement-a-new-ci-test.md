@@ -85,7 +85,7 @@ def discover_skeleton_gpu_discrete(
     should_log: bool = False,
 ) -> SkeletonResult:
 
-    # initialize the data structures you need on the gpu using cupy and do your necessary setup
+    # initialize the data structures you need on the GPU using CuPy and do your necessary setup
 
      d_skeleton = cp.asarray(skeleton, dtype=cp.uint16)
      d_seperation_sets = cp.full(num_variables * num_variables * max_level, -1, np.int32)
