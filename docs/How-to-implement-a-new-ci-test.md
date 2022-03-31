@@ -132,7 +132,7 @@ def discover_skeleton_gpu_discrete(
 Note: make sure the types you initialize your data with on python side matches the data types the CUDA kernel takes. An example in the template is d_skeleton that is initialized as cp.uint16.  
 
 After implementing the kernel discovery you can extend the pc function (gpucsl/pc/pc.py). First add your distribution to the DataDistribution enum in the same file. Then in pc test for your DataDistribution and call your skeleton discovery like it is done for DataDistribution.GAUSSIAN or DataDistribution.DISCRETE. Depending on whether you need more arguments you have to extend the pc functions argument list. 
-As long as you return a correct SkeletonResult from your skeleton discovery you do not need to change anything else. The edge orientation will work.
+As long as you return a correct SkeletonResult from your skeleton discovery you do not need to change anything else. The edge orientation should work.
 
 
 ## Extend CLI (optional) 
