@@ -18,8 +18,8 @@ Now following are the necessary steps for making a new distribution accessible i
 This is the part we can help you with the least. You have to design efficient CUDA kernel code. While doing so you can use 
 any of the already existing helper functions and you can reuse code from our distributions however you like.
 
-You have to place your CUDA files in the gpucsl/pc/cuda or gpucsl/pc/cuda/helpers directories! (otherwise, you have to modify
-the compiler_options variable in the get_module function of gpucsl/pc/kernel_management.py like it is done for cuda_dir or cuda_helpers_dir)
+You have to place your CUDA files in the `gpucsl/pc/cuda` or `gpucsl/pc/cuda/helpers` directories! (otherwise, you have to modify
+the compiler_options variable in the get_module function of `gpucsl/pc/kernel_management.py` like it is done for _cuda_dir_ or _cuda_helpers_dir_)
 
 Note: If needed, kernels can be templated. Since the CUDA code is compiled during the runtime of GPUCSL (!) there are already some 
 runtime information, like the number of variables, accessible. For more information see the next section.
@@ -30,7 +30,7 @@ runtime information, like the number of variables, accessible. For more informat
 The Kernel Management encapsulates the details of kernel access, for example, the grid and block mapping of the kernel is defined here.
 Otherwise encapsulates details of the underlying CuPy library (which CUDA file to read, it compiles the code on the creation of the class, function name resolution to level). 
 
-To write your own Kernel Management you want to inherit from the abstract base class Kernel. You then have to implement the following methods:
+To write your own Kernel Management you should inherit from the abstract base class Kernel. You then have to implement the following methods:
 
 - __init__: With the __init__ method you take the parameters you need for everything involved into your Kernel Management. So if you need something to calculate your grid and block mapping you need to take these parameters here. At a minimum, you have to take the parameters is_debug and should_log.
   A template for an __init__ method is:
@@ -131,7 +131,7 @@ def discover_skeleton_gpu_discrete(
 
 Note: make sure the types you initialize your data with on Python side match the data types the CUDA kernel takes. An example in the template is d_skeleton which is initialized as cp.uint16.
 
-After implementing the kernel discovery you can extend the pc function (gpucsl/pc/pc.py). First add your distribution to the DataDistribution enum in the same file. Then in pc test for your DataDistribution and call your skeleton discovery like it is done for DataDistribution.GAUSSIAN or DataDistribution.DISCRETE. Depending on whether you need more arguments you have to extend the pc functions argument list. 
+After implementing the kernel discovery you can extend the pc function (`gpucsl/pc/pc.py`). First add your distribution to the DataDistribution enum in the same file. Then in pc test for your DataDistribution and call your skeleton discovery like it is done for _DataDistribution.GAUSSIAN_ or _DataDistribution.DISCRETE_. Depending on whether you need more arguments you have to extend the pc functions argument list. 
 As long as you return a correct SkeletonResult from your skeleton discovery you do not need to change anything else. The edge orientation should work.
 
 
@@ -141,6 +141,6 @@ Depending on how you want to use GPUCSL you want to extend the CLI (if you just 
 You mainly have to extend the command line parser (gpucsl/pc/command_line_parser.py) with the arguments you need. The parser 
 basically used the argparse package, so please refer to https://docs.python.org/3/library/argparse.html on how to use it.
 
-One mandatory step will be to add a new distribution flag (example for distribution flag: gaussian). Then you have to extend the function `gpucsl_cli` 
-(gpucsl/cli/cli.py). The main points are error checking for new parameters you introduced and passing the sanitized values to the run_on_dataset function. 
+One mandatory step will be to add a new distribution flag (example for distribution flag: gaussian). Then you have to extend the function _gpucsl_cli_ 
+(`gpucsl/cli/cli.py`). The main points are error checking for new parameters you introduced and passing the sanitized values to _the run_on_dataset_ function. 
 You do not need to change anything to write the results as done currently.

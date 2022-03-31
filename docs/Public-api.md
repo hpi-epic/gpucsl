@@ -11,7 +11,6 @@ pc(
     devices: List[int] = [0],
     sync_device: int = None,
     gaussian_correlation_matrix: np.ndarray = None,
-    discrete_max_memory_size=None,
 ) -> PCResult
 
 Executes the PC algorithm.
@@ -27,7 +26,6 @@ Executes the PC algorithm.
 - devices: Which gpus should be used.  
 - sync_device: Which of the given (sync_device has to be part of devices!) should be used to sync state while using multiple gpus
   gaussian_correlation_matrix: A correlation matrix can be passed so time measurements do not inlcude the calculation. Only possible when using DataDistribution.GAUSSIAN. If None given GPUCSL calculates it itself.  
-- discrete_max_memory_size: The maximum space to allocate for the working structures for the discrete kernel in bytes. Small values decrease the parallelisation. If None given defaults to 95% of the total available memory on GPU. 
 
 ### Returns
 
