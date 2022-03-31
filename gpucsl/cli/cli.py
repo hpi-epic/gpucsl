@@ -57,8 +57,6 @@ def gpucsl_cli(command_line_arguments):
             "Multi GPU independece test currently only supported for gaussian independece test"
         )
 
-    
-
     data = read_csv(dataset)
 
     if is_discrete:
