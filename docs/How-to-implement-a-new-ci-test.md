@@ -64,7 +64,7 @@ Optional:
     For example: Can be used to check if the given level is below the max level.
 
 
-You will use your Kernel in the next step.
+The implemented kernel will be used in the next step.
 
 
 ## Implement your own skeleton discovery
