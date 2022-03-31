@@ -15,7 +15,7 @@ Now following are the necessary steps for making a new distribution accessible i
 
 ## Implement your CUDA kernel
 
-While designing a CUDA kernel code you can reuse 
+We cannot actively support you during this step, but while designing a CUDA kernel code you can reuse 
 already existing helper functions and code from other distributions.
 
 You have to place your CUDA files in the `gpucsl/pc/cuda` or `gpucsl/pc/cuda/helpers` directories! (otherwise, you have to modify
