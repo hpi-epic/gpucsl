@@ -50,7 +50,7 @@ should_log: bool = False,
 devices: List[int] = [0],
 sync_device: int = None,) -> SkeletonResult
 
-Does the skeleton discovery using a conditional independence test for a multivariate normal data distribution. Supports the use of multiple gpus. Just give an array with multiple entries to the devices parameter (provided your machine includes multiple gpus)
+Performs the skeleton discovery using a conditional independence test for a multivariate normal data distribution. Offers a multi GPU support. For that, provide an array with device IDs as the devices parameter (provided your system includes multiple GPUs)
 
 ### Parameters
 - skeleton: A numpy array representing a fully connected graph with as many vertices as there are variables contained in data.
