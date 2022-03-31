@@ -10,7 +10,7 @@ Testing your code is optional, but highly recommended. This project supports mul
 - Google test: Enables to test CUDA code not covered by the previous point or if you simply prefer to test your CUDA in C++
 
 
-Now following are the necessary steps for making a new distribution acessible in GPUCSL. We recommended to follow the given order of steps.
+Now following are the necessary steps for making a new distribution accessible in GPUCSL. We recommend following the given order of steps.
 
 
 ## Implement your CUDA kernel
