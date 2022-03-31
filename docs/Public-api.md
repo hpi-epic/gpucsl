@@ -24,7 +24,7 @@ Executes the PC algorithm.
 - kernels: You can compile the kernels that should be used yourself and pass them to the function. Used for time measurements where the compile time should be excluded. Leave None and GPUCSL will compile the kernels for you   
 - is_debug: If set to true kernels will get compiled in debug mode
 - should_log: Sets a macro 'LOG' while compiling the CUDA kernels. Can be used for custom logging from kernels  
-- devices: Which gpus should be used.  
+- devices: Device IDs of GPUs to be used.  
 - sync_device: Device ID of the GPU used for state synchronization in the multi GPU case (Notice: sync_device has to be in the devices list!)
   gaussian_correlation_matrix: A correlation matrix can be passed so time measurements do not inlcude the calculation. Only possible when using DataDistribution.GAUSSIAN. If None given GPUCSL calculates it itself.  
 - discrete_max_memory_size: The maximum space to allocate for the working structures for the discrete kernel in bytes. Small values decrease the parallelisation. If None given defaults to 95% of the total available memory on GPU. 
