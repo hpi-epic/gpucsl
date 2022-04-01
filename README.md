@@ -57,15 +57,16 @@ The following code snippet provides a small example for calling the `pc` functio
 import numpy as np
 from gpucsl.pc.pc import pc, DataDistribution
 
-samples = np.random.rand(1000,10)
+samples = np.random.rand(1000, 10)
 max_level = 3
 alpha = 0.05
-res = pc(
-	samples,
-	DataDistribution.GAUSSIAN,
-	max_level,
-	alpha
-)
+((directed_graph, separation_sets, pmax, discover_skeleton_runtime,
+  edge_orientation_runtime, discover_skeleton_kernel_runtime),
+    pc_runtime) = pc(samples,
+                     DataDistribution.GAUSSIAN,
+                     max_level,
+                     alpha)
+
 ```
 
 Additional usage examples can be found in `benchmarks/benchmark_gpucsl.py`.
