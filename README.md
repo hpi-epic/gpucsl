@@ -49,8 +49,28 @@ python3 -m gpucsl --gaussian -d ./data.csv -o . -l 3
 - `discover_skeleton_gpu_gaussian` - determines the undirected skeleton graph for gaussian distribution
 - `discover_skeleton_gpu_discrete` - determines the undirected skeleton graph for discrete distribution
 - `orient_edges` - orients the edges of the undirected skeleton graph by detection of v-structures and application of Meek's orientation rules. Outputs the CPDAG from skeleton.
+For more detail take a look at the [API description](https://github.com/hpi-epic/gpucsl/blob/main/docs/Public-api.md).
 
-A usage example can be found in `benchmarks/benchmark_gpucsl.py`.
+The following code snippet provides a small example for calling the `pc` function:
+```python
+import numpy as np
+from gpucsl.pc.pc import pc, DataDistribution
+from gpucsl.pc.helpers import correlation_matrix_of
+
+samples = np.random.rand(1000,10)
+max_level = 3
+alpha = 0.05
+correlation_matrix = correlation_matrix_of(samples)
+res = pc(
+	samples,
+	DataDistribution.GAUSSIAN,
+	max_level,
+	alpha,
+	gaussian_correlation_matrix=correlation_matrix
+)
+```
+
+Additional usage examples can be found in `benchmarks/benchmark_gpucsl.py`.
 
 ### Multi GPU support
 
