@@ -56,18 +56,15 @@ The following code snippet provides a small example for calling the `pc` functio
 ```python
 import numpy as np
 from gpucsl.pc.pc import pc, DataDistribution
-from gpucsl.pc.helpers import correlation_matrix_of
 
 samples = np.random.rand(1000,10)
 max_level = 3
 alpha = 0.05
-correlation_matrix = correlation_matrix_of(samples)
 res = pc(
 	samples,
 	DataDistribution.GAUSSIAN,
 	max_level,
-	alpha,
-	gaussian_correlation_matrix=correlation_matrix
+	alpha
 )
 ```
 
