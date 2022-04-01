@@ -50,7 +50,7 @@ bnlearn_results <- matrix(NA, nrow=length(datasets_discrete), ncol=7)
 colnames(bnlearn_results) <- c("library", "dataset", "distribution", "full_runtime", "discover_skeleton_time", "edge_orientation_time", "kernel_time")
 
 cores = detectCores()
-print("MAX CORES", cores)
+print(paste("MAX CORES", cores))
 
 skelmethod <- "stable.fast"
 
