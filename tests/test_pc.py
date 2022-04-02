@@ -23,8 +23,7 @@ def test_pc(input_data: Fixture):
 
     max_level = 3
 
-    pc = GaussianPC(data, max_level, alpha)
-    pc.set_distribution_specific_options()
+    pc = GaussianPC(data, max_level, alpha).set_distribution_specific_options()
     (res, _) = pc.execute()
 
     assert check_graph_equality(
@@ -61,9 +60,7 @@ def test_pc_interface(monkeypatch, input_data: Fixture, devices: List[int]):
         max_level,
         alpha,
         kernels=kernels,
-    )
-
-    pc.set_distribution_specific_options(
+    ).set_distribution_specific_options(
         correlation_matrix=correlation_matrix, devices=devices
     )
 
@@ -98,8 +95,7 @@ def test_pc_runtime_with_supplied_kernels(input_data):
         max_level,
         alpha,
         kernels,
-    )
-    pc.set_distribution_specific_options(correlation_matrix=correlation_matrix)
+    ).set_distribution_specific_options(correlation_matrix=correlation_matrix)
 
     (_, full_runtime) = pc.execute()
 
@@ -124,8 +120,7 @@ def test_pc_runtime_without_supplied_kernels(input_data):
         data,
         max_level,
         alpha,
-    )
-    pc.set_distribution_specific_options(correlation_matrix=correlation_matrix)
+    ).set_distribution_specific_options(correlation_matrix=correlation_matrix)
 
     (_, full_runtime) = pc.execute()
     print(f"pc duration: {full_runtime}")

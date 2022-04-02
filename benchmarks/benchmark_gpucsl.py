@@ -116,8 +116,7 @@ def run_benchmark_gaussian(samples, max_level, devices, sync_device):
         max_level,
         0.05,
         kernels=kernels,
-    )
-    pc.set_distribution_specific_options(devices, sync_device, correlation_matrix)
+    ).set_distribution_specific_options(devices, sync_device, correlation_matrix)
 
     (pc_result, pc_runtime) = pc.execute()
 
@@ -143,9 +142,11 @@ def run_benchmark_discrete(samples, max_level, devices, sync_device):
         samples.shape[0],
     )
 
-    pc = DiscretePC(samples, max_level, alpha=0.05, kernels=kernels)
-
-    (pc_result, pc_runtime) = pc.execute()
+    (pc_result, pc_runtime) = (
+        DiscretePC(samples, max_level, alpha=0.05, kernels=kernels)
+        .set_distribution_specific_options()
+        .execute()
+    )
 
     duration_incl_compilation = timer() - start
     return (

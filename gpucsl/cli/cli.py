@@ -67,7 +67,7 @@ def gpucsl_cli(command_line_arguments):
     pc = pc_class(data, max_level, alpha_level, is_debug=debug, should_log=should_log)
 
     if is_discrete:
-        pass
+        pc.set_distribution_specific_options()
     elif is_gaussian:
         correlation_matrix = read_correlation_matrix(correlation_matrix_path)
 

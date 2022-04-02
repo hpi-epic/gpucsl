@@ -2,10 +2,11 @@ from abc import ABC, abstractmethod
 
 import networkx as nx
 import numpy as np
+from typing import List
+
 from gpucsl.pc.discover_skeleton_discrete import discover_skeleton_gpu_discrete
 from gpucsl.pc.edge_orientation.edge_orientation import orient_edges
 from gpucsl.pc.discover_skeleton_gaussian import discover_skeleton_gpu_gaussian
-
 from gpucsl.pc.helpers import PCResult, init_pc_graph, timed
 from gpucsl.pc.pc_validations import (
     validate_alpha,
@@ -39,11 +40,8 @@ class PC(ABC):
         self.graph = init_pc_graph(data)
 
     @abstractmethod
-    def skeleton_discovery_function(self):
-        pass
-
     def discover_skeleton(self):
-        return self.skeleton_discovery_function()(self)
+        pass
 
     @abstractmethod
     def set_distribution_specific_options(self):
@@ -70,27 +68,22 @@ class PC(ABC):
         )
 
 
-# simple glue method so we do not have to change discover_skeleton_gpu_gaussian
-def discover_skeleton_gpu_gaussian_using_config(config):
-    return discover_skeleton_gpu_gaussian(
-        config.graph,
-        config.data,
-        config.correlation_matrix,
-        config.alpha,
-        config.max_level,
-        config.num_variables,
-        config.num_observations,
-        config.kernels,
-        config.is_debug,
-        config.should_log,
-        config.devices,
-        config.sync_device,
-    )
-
-
 class GaussianPC(PC):
-    def skeleton_discovery_function(self):
-        return discover_skeleton_gpu_gaussian_using_config
+    def discover_skeleton(self):
+        return discover_skeleton_gpu_gaussian(
+            self.graph,
+            self.data,
+            self.correlation_matrix,
+            self.alpha,
+            self.max_level,
+            self.num_variables,
+            self.num_observations,
+            self.kernels,
+            self.is_debug,
+            self.should_log,
+            self.devices,
+            self.sync_device,
+        )
 
     def set_distribution_specific_options(
         self,
@@ -106,28 +99,25 @@ class GaussianPC(PC):
         self.sync_device = sync_device
         self.correlation_matrix = correlation_matrix
 
-
-# simple glue method so we do not have to change discover_skeleton_gpu_discrete
-def discover_skeleton_gpu_discrete_using_config(config):
-    return discover_skeleton_gpu_discrete(
-        config.graph,
-        config.data,
-        config.alpha,
-        config.max_level,
-        config.num_variables,
-        config.num_observations,
-        config.max_memory_size,
-        config.kernels,
-        config.memory_restriction,
-        config.is_debug,
-        config.should_log,
-    )
+        return self
 
 
 class DiscretePC(PC):
-    def skeleton_discovery_function(self):
-        return discover_skeleton_gpu_discrete_using_config
+    def discover_skeleton(self):
+        return discover_skeleton_gpu_discrete(
+            self.graph,
+            self.data,
+            self.alpha,
+            self.max_level,
+            self.num_variables,
+            self.num_observations,
+            self.kernels,
+            self.memory_restriction,
+            self.is_debug,
+            self.should_log,
+        )
 
-    def set_distribution_specific_options(self, max_memory_size=None):
-        # Todo: change
-        self.max_memory_size = max_memory_size
+    def set_distribution_specific_options(self, memory_restriction=None):
+        self.memory_restriction = memory_restriction
+
+        return self
