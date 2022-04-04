@@ -89,43 +89,6 @@ set_distribution_specific_options(self, memory_restriction=None)
 
 
 <br/><br/>
-## pc (gpucsl/pc/pc.py)
-
-pc(
-    data: np.ndarray,
-    data_distribution: DataDistribution,
-    max_level: int,
-    alpha=0.05,
-    kernels=None,
-    is_debug: bool = False,
-    should_log: bool = False,
-    devices: List[int] = [0],
-    sync_device: int = None,
-    gaussian_correlation_matrix: np.ndarray = None,
-) -> PCResult
-
-Executes the PC algorithm.
-
-### Parameters
-- data: The data to analyze  
-- data_distribution: Either DataDistribution.DISCRETE or DataDistribution.GAUSSIAN depending on the assumed distribution of the data  
-- max_level: max level until which the pc algorithm will run (inclusive). Depending on the max level data structures will get allocated on the GPU, so you want to keep it small to avoid out of memory problems  
-- alpha: Alpha value for the statistical tests
-- kernels: You can compile the kernels that should be used yourself and pass them to the function. Used for time measurements where the compile time should be excluded. Leave None and GPUCSL will compile the kernels for you   
-- is_debug: If set to true kernels will get compiled in debug mode
-- should_log: Sets a macro 'LOG' while compiling the CUDA kernels. Can be used for custom logging from kernels  
-- devices: Device IDs of GPUs to be used.  
-- sync_device: Device ID of the GPU used for state synchronization in the multi GPU case (Notice: sync_device has to be in the devices list!)
-  gaussian_correlation_matrix: A correlation matrix can be passed so time measurements do not inlcude the calculation. Only possible when using DataDistribution.GAUSSIAN. If None given GPUCSL calculates it itself.  
-
-### Returns
-
-The CPDAG that results from causal structure learning on your data, the separation sets, the maximum p values, and time measurements for the skeleton discovery and edge orientation of the pc algorithm, as well as time measurement for the execution of the kernels.
-
-### Return Value
-- PCResult
-
-<br/><br/>
 ## discover_skeleton_gpu_gaussian (gpucsl/pc/discover_skeleton_gaussian.py)
 discover_skeleton_gpu_gaussian(skeleton: np.ndarray,
 data: np.ndarray,
