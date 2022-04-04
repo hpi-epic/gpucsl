@@ -11,7 +11,10 @@ alpha = 0.05
 
 pc = GaussianPC(samples, max_level, alpha).set_distribution_specific_options()
 
-((skeleton, separation_sets, pmax, computation_time), discovery_runtime) = pc.discover_skeleton()
+(
+    (skeleton, separation_sets, pmax, computation_time),
+    discovery_runtime,
+) = pc.discover_skeleton()
 
 
 # way 2: call the discover method yourself
@@ -20,12 +23,9 @@ graph = init_pc_graph(samples)
 num_variables = samples.shape[1]
 num_observations = samples.shape[0]
 
-((skeleton, separation_sets, pmax, computation_time), discovery_runtime) = discover_skeleton_gpu_gaussian(
-    graph,
-    samples,
-    None,
-    alpha,
-    max_level,
-    num_variables,
-    num_observations
+(
+    (skeleton, separation_sets, pmax, computation_time),
+    discovery_runtime,
+) = discover_skeleton_gpu_gaussian(
+    graph, samples, None, alpha, max_level, num_variables, num_observations
 )

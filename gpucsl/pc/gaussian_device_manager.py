@@ -5,9 +5,7 @@ from threading import Event, Thread
 from typing import List, Tuple, Callable
 
 from gpucsl.pc.helpers import transform_to_pmax_cupy, postprocess_pmax_cupy, timed
-from gpucsl.pc.kernel_management import (
-    Kernels,
-)
+from gpucsl.pc.kernel_management import Kernels
 
 WorkerFunction = Callable[
     [int, "GaussianDeviceManager"], None

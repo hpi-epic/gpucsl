@@ -155,9 +155,12 @@ def discover_skeleton_gpu_gaussian(
     log_time("Computation time", computation_time)
 
     (
-        postprocessed_merged_pmax,
-        merged_separation_sets,
-    ), merge_time = device_manager.get_merged_pmaxes_and_separation_sets()
+        (
+            postprocessed_merged_pmax,
+            merged_separation_sets,
+        ),
+        merge_time,
+    ) = device_manager.get_merged_pmaxes_and_separation_sets()
     log_time("Merge time", merge_time)
 
     separation_sets = merged_separation_sets.reshape(

@@ -1,9 +1,7 @@
 import networkx as nx
 import pytest
 
-from gpucsl.pc.edge_orientation.v_structures import (
-    orient_v_structure,
-)
+from gpucsl.pc.edge_orientation.v_structures import orient_v_structure
 from tests.equality import check_graph_equality, graph_equality_edges
 from tests.fixtures.file_readers import read_pcalg_gml, sepset_dict_to_ndarray
 from tests.fixtures.input_data import input_data

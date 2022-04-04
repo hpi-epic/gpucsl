@@ -3,9 +3,7 @@ import pandas as pd
 import argparse
 import csv
 
-from gpucsl.pc.kernel_management import (
-    Kernels,
-)
+from gpucsl.pc.kernel_management import Kernels
 import cupy as cp
 from timeit import default_timer as timer
 from sklearn.preprocessing import OrdinalEncoder
