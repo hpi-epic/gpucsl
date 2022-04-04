@@ -57,7 +57,7 @@ Additional detail is found in the [API description](https://github.com/hpi-epic/
 The following code snippet provides a small example for using `GaussianPC`:
 ```python
 import numpy as np
-from gpucsl.pc.pc import pc, DataDistribution
+from gpucsl.pc.pc import GaussianPC
 
 samples = np.random.rand(1000, 10)
 max_level = 3
@@ -70,7 +70,7 @@ alpha = 0.05
 
 ```
 
-Additional usage examples can be found in `benchmarks/benchmark_gpucsl.py`.
+Additional usage examples can be found in `docs/examples/`.
 
 ### Multi GPU support
 
