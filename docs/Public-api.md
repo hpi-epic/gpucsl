@@ -40,7 +40,7 @@ The CPDAG that results from causal structure learning on your data, the separati
 #### Return Value
 - PCResult
 
-Executes the pc algorithm. Presuppose you run _set_distribution_specific_options_ before!.
+Executes the pc algorithm. Presuppose you run _set_distribution_specific_options_ before!
 
 
 
