@@ -56,7 +56,6 @@ def build_command_line_parser():
         "--sync-device",
         help="Index of the GPU used to sync the others (currently only supported for gaussian independence test). Defaults to 0",
         type=int,
-        default=0,
     )
     parser.add_argument(
         "-v",

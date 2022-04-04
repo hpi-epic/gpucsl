@@ -7,7 +7,7 @@ import pandas as pd
 import os
 import numpy as np
 
-from gpucsl.pc.pc import DataDistribution, pc
+from gpucsl.pc.pc import GaussianPC
 from tests.fixtures.file_readers import (
     read_gpucsl_gml,
     read_ground_truth_gml,
@@ -77,7 +77,7 @@ def generate_input_data_and_results_if_needed(
     if not os.path.isfile(f"{dataset_dir}/output.gml") and write_gpucsl:
         samples_path = f"{dataset_dir}/{dataset_name}.csv"
         data = pd.read_csv(samples_path, header=None).to_numpy()
-        res = pc(data, DataDistribution.GAUSSIAN, 10)
+        res = GaussianPC(data, 10).set_distribution_specific_options()
         nx.write_gml(res.result.directed_graph, f"{dataset_dir}/output.gml")
 
         if not os.path.isfile(f"{dataset_dir}/output_pmax.csv"):

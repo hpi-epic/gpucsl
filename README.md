@@ -24,7 +24,7 @@ Note, that `GPUCSL` provides kernel implementations that cover conditional indep
 
 ## <a name="usage"></a>  Usage
 
-Linux and a NVIDIA GPU with CUDA are required. We support running on multiple GPUs (experimental; for now, only for Gaussian CI kernel - `DataDistribution.GAUSSIAN`).
+Linux and a NVIDIA GPU with CUDA are required. We support running on multiple GPUs (experimental; for now, only for Gaussian CI kernel - `GaussianPC`).
 
 ### CLI
 
@@ -33,6 +33,7 @@ With the CLI, the PC algorithm is executed on the specified datasets. Three outp
 - {dataset}.gml - the resulting CPDAG  containing the causal relationships
 - {dataset}_pmax.csv - the maximum pvalues used for the conditional independence tests
 - {dataset}_sepset.csv - the separation sets for the removed edges
+- {dataset}_config.txt - the parameters the CLI got called with
 
 All paths you give to the CLI are relative to your current directory.
 An example call for `GPUCSL` with a CI test for multivariate normal or Gaussian distributed data could look like this (assuming your data is in "./data.csv"):
@@ -45,35 +46,35 @@ python3 -m gpucsl --gaussian -d ./data.csv -o . -l 3
 
 `GPUCSL` provides a python API for:
 
-- `pc` (`DataDistribution.GAUSSIAN`, `DataDistribution.DISCRETE`) - implements the full PC algorithm for discrete and Gaussian data. Outputs the CPDAG from observational data. Similar to the CLI.
+- `GaussianPC` - implements the full PC algorithm for multivariate normal data. Outputs the CPDAG from observational data. Similar to the CLI.
+- `DiscretePC` -implements the full PC algorithm for discrete data. Outputs the CPDAG from observational data. Similar to the CLI.
 - `discover_skeleton_gpu_gaussian` - determines the undirected skeleton graph for gaussian distribution
 - `discover_skeleton_gpu_discrete` - determines the undirected skeleton graph for discrete distribution
 - `orient_edges` - orients the edges of the undirected skeleton graph by detection of v-structures and application of Meek's orientation rules. Outputs the CPDAG from skeleton.
 
 Additional detail is found in the [API description](https://github.com/hpi-epic/gpucsl/blob/main/docs/Public-api.md).
 
-The following code snippet provides a small example for calling the `pc` function:
+The following code snippet provides a small example for using `GaussianPC`:
 ```python
 import numpy as np
-from gpucsl.pc.pc import pc, DataDistribution
+from gpucsl.pc.pc import GaussianPC
 
 samples = np.random.rand(1000, 10)
 max_level = 3
 alpha = 0.05
 ((directed_graph, separation_sets, pmax, discover_skeleton_runtime,
   edge_orientation_runtime, discover_skeleton_kernel_runtime),
-    pc_runtime) = pc(samples,
-                     DataDistribution.GAUSSIAN,
+    pc_runtime) = GaussianPC(samples,
                      max_level,
-                     alpha)
+                     alpha).set_distribution_specific_options().execute()
 
 ```
 
-Additional usage examples can be found in `benchmarks/benchmark_gpucsl.py`.
+Additional usage examples can be found in `docs/examples/`.
 
 ### Multi GPU support
 
-Multi GPU support is currently only implemented for the gaussian CI kernel (`DataDistribution.GAUSSIAN`) for skeleton discovery. The adjacency matrix (skeleton) is partitioned horizontally, and each GPU executes the CI tests on the assigned partition. For example, in the case of the dataset with 6 variables and 3 GPUs, the first GPU executes CI tests on edges 0-i, 1-i, where i is in {0..5\} (0-indexing), the second GPU executes CI tests on edges 2-i, 3-i and so on.
+Multi GPU support is currently only implemented for the gaussian CI kernel (`GaussianPC`) for skeleton discovery. The adjacency matrix (skeleton) is partitioned horizontally, and each GPU executes the CI tests on the assigned partition. For example, in the case of the dataset with 6 variables and 3 GPUs, the first GPU executes CI tests on edges 0-i, 1-i, where i is in {0..5\} (0-indexing), the second GPU executes CI tests on edges 2-i, 3-i and so on.
 
 In case of an edge being deleted on multiple GPUs in the same level (for example, the edge 1-3 is deleted on the first GPU, the edge 3-1 is deleted on the second GPU in the example above), the separation set with the highest p-value is written to the end result (along with the corresponding p-value).
 

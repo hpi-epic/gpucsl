@@ -3,19 +3,13 @@ import pandas as pd
 import argparse
 import csv
 
-from gpucsl.pc.pc import pc
-from gpucsl.pc.kernel_management import (
-    DiscreteKernel,
-    Kernels,
-    CompactKernel,
-    GaussianKernel,
-)
+from gpucsl.pc.kernel_management import Kernels
 import cupy as cp
 from timeit import default_timer as timer
 from sklearn.preprocessing import OrdinalEncoder
 
 from gpucsl.pc.helpers import correlation_matrix_of
-from gpucsl.pc.pc import DataDistribution
+from gpucsl.pc.pc import GaussianPC, DiscretePC
 
 
 SCRIPT_PATH = Path(__file__).parent.resolve()
@@ -115,16 +109,14 @@ def run_benchmark_gaussian(samples, max_level, devices, sync_device):
         max_level, samples.shape[1], devices
     )
 
-    (pc_result, pc_runtime) = pc(
+    pc = GaussianPC(
         samples,
-        DataDistribution.GAUSSIAN,
         max_level,
         0.05,
-        gaussian_correlation_matrix=correlation_matrix,
         kernels=kernels,
-        devices=devices,
-        sync_device=sync_device,
-    )
+    ).set_distribution_specific_options(devices, sync_device, correlation_matrix)
+
+    (pc_result, pc_runtime) = pc.execute()
 
     duration_incl_compilation = timer() - start
     return (
@@ -148,8 +140,10 @@ def run_benchmark_discrete(samples, max_level, devices, sync_device):
         samples.shape[0],
     )
 
-    (pc_result, pc_runtime) = pc(
-        samples, DataDistribution.DISCRETE, max_level, alpha=0.05, kernels=kernels
+    (pc_result, pc_runtime) = (
+        DiscretePC(samples, max_level, alpha=0.05, kernels=kernels)
+        .set_distribution_specific_options()
+        .execute()
     )
 
     duration_incl_compilation = timer() - start

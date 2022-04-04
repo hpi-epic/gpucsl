@@ -53,8 +53,16 @@ class MockResult:
     result = MockInnerResult()
 
 
+class MockPC:
+    def set_distribution_specific_options(self, *args, **kwargs):
+        pass
+
+    def execute(self):
+        return MockResult()
+
+
 def pc(*args, **kwargs):
-    return MockResult()
+    return MockPC()
 
 
 @pytest.fixture
@@ -62,7 +70,8 @@ def setup(mocker):
     mocker.patch.object(argparse.ArgumentParser, "exit", exit)
     mocker.patch("os.makedirs")
     mocker.patch("pandas.read_csv", read_csv)
-    mocker.patch("gpucsl.cli.cli.pc", pc)
+    mocker.patch("gpucsl.cli.cli.GaussianPC", pc)
+    mocker.patch("gpucsl.cli.cli.DiscretePC", pc)
     mocker.patch("gpucsl.cli.cli.write_results_and_config")
     mocker.patch("numpy.savetxt")
 
@@ -115,36 +124,6 @@ def test_error_on_discrete_and_multiple_gpus_given(setup):
         rcsl(["-d", "foobar", "-o", "foo/bar/foobar", "--discrete", "-g", "0", "1"])
 
 
-def test_error_more_gpus_given_than_possible(setup):
-    with pytest.raises(GpucslError):
-        rcsl(
-            [
-                "-d",
-                "foobar",
-                "-o",
-                "foo/bar/foobar",
-                "--discrete",
-                "-g",
-            ]
-            + [str(i) for i in range(cp.cuda.runtime.getDeviceCount() + 1)]
-        )
-
-
-def test_error_higher_gpu_index_than_possible(setup):
-    with pytest.raises(GpucslError):
-        rcsl(
-            [
-                "-d",
-                "foobar",
-                "-o",
-                "foo/bar/foobar",
-                "--discrete",
-                "-g",
-            ]
-            + [str(cp.cuda.runtime.getDeviceCount() + 1)]
-        )
-
-
 def test_alpha_has_to_be_between_0_and_1(setup):
     with pytest.raises(ExceptionForTests):
         rcsl(["-d", "foobar", "-l", "3", "--gaussian", "-a", "-1"])
@@ -185,13 +164,13 @@ def test_read_correlation_martrix_preserves_none():
 def test_alpha_gets_set(setup, mocker):
     alpha = 0
 
-    def pc(data, data_distrib, max_level, alph, **kwargs):
+    def pc(data, max_level, alph, **kwargs):
         nonlocal alpha
         alpha = alph
 
-        return MockResult()
+        return MockPC()
 
-    mocker.patch("gpucsl.cli.cli.pc", pc)
+    mocker.patch("gpucsl.cli.cli.GaussianPC", pc)
 
     expected_alpha = 0.6
 
@@ -214,13 +193,14 @@ def test_alpha_gets_set(setup, mocker):
 def test_max_level_gets_set(setup, mocker):
     max_level = 0
 
-    def pc(data, data_distrib, level, alpha, **kwargs):
+    def pc(data, level, alpha, **kwargs):
         nonlocal max_level
         max_level = level
+        print(data, level)
 
-        return MockResult()
+        return MockPC()
 
-    mocker.patch("gpucsl.cli.cli.pc", pc)
+    mocker.patch("gpucsl.cli.cli.GaussianPC", pc)
 
     expected_max_level = 5
 

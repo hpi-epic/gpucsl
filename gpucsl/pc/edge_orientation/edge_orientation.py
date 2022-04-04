@@ -4,9 +4,7 @@ import networkx as nx
 import numpy as np
 
 from gpucsl.pc.edge_orientation.orientation_rules import apply_rules
-from gpucsl.pc.edge_orientation.v_structures import (
-    orient_v_structure,
-)
+from gpucsl.pc.edge_orientation.v_structures import orient_v_structure
 from gpucsl.pc.helpers import timed
 
 # Takes the undirected graph, represented as directed graph with edges in both

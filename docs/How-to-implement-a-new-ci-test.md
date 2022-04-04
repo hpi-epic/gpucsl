@@ -41,23 +41,16 @@ To write your own Kernel Management you should inherit from the abstract base cl
         is_debug: bool = False,
         should_log: bool = False,
     ):
-        super().__init__(is_debug=is_debug, should_log=should_log)
         self.your_choosen_parameters = your_choosen_parameters
 
-        # calculate all the kernel function signature names you later on want to be able to call (something needed by CuPy)
-        # has to be an array, but if you only need one signature you can change this to be an array with one entry
-        kernel_function_signatures = [
-            self.kernel_function_signature_for_level(level)
-            for level in range(0, max_level + 1)
-        ]
-
-        # pass the kernel function signatures and compile the CUDA code
-        self.define_module("gaussian_ci.cu", kernel_function_signatures)
+        super().__init__(is_debug=is_debug, should_log=should_log)
   ```    
 - kernel_function_name_for_level: Return the name of the kernel for the given level. Can return different names for different levels (as you maybe have written 
     optimizations for a specific level in form of an extra CUDA function, as we did for DiscreteKernel. Otherwise, you can also return just a static name like the CompactKernel)
 - template_specification_for_level: If you templated your kernel in the CUDA code CuPy needs the filled-out template to access the instantiated functions. Here you provide a string with the parameters you give the template for the current level.
 - grid_and_block_mapping: Defines how your kernel is mapped into grids and blocks
+- cuda_file: Return the filename of the cuda file containing the kernel you want to use (the path is relative to the `gpucsl/pc/cuda` directory)
+- every_accessable_function_signature: Return an array containing every function signature that should be accessable later on. (You probably want use the _kernel_function_signature_for_level_ method here. It returns the kernel function signature for a level based on your _kernel_function_name_for_level_ and  _template_specification_for_level_ methods)
 
 Optional:
 - pre_kernel_launch_check: A hook executed before the raw CuPy kernel is accessed and run. Can be used to check if everything is ok before the launch happens. 
@@ -73,7 +66,7 @@ Following is a template you can use for the skeleton discovery. Just copy and ad
 
 ```
 @timed
-def discover_skeleton_gpu_discrete(
+def discover_skeleton(
     skeleton: np.ndarray,
     data: np.ndarray,
     alpha: float,
@@ -131,10 +124,9 @@ def discover_skeleton_gpu_discrete(
 
 Note: make sure the types you initialize your data with on Python side match the data types the CUDA kernel takes. An example in the template is d_skeleton which is initialized as cp.uint16.
 
-
-After implementing the kernel discovery you can extend the pc function (`gpucsl/pc/pc.py`). First, add your distribution to the DataDistribution enum in the same file. Then in pc test for your DataDistribution and call your skeleton discovery like it is done for _DataDistribution.GAUSSIAN_ or _DataDistribution.DISCRETE_. Depending on whether you need more arguments you have to extend the pc functions argument list. 
-
-As long as you return a correct SkeletonResult from your skeleton discovery you do not need to change anything else. The edge orientation should work.
+After implementing the kernel discovery you inherit from the abstract _PC_(`gpucsl/pc/pc.py`) class. Now implement the methods:
+-  _set_distribution_specific_options_ method: Takes the arguments specific to your distribution and saves them as instance variables. You can return the object itself in the end in order to chain the execute call to it easier.
+- _discover_skeleton_: Returns the result of the earlier implemented skeleton discovery. You can just pass the locally saved parameters to your earlier implemented _discover_skeleton_ function or implement the complete skeleton discovery here and just use the instance variables directly
 
 
 ## Extend CLI (optional) 
@@ -144,5 +136,5 @@ You mainly have to extend the command line parser (gpucsl/pc/command_line_parser
 basically used the argparse package, so please refer to https://docs.python.org/3/library/argparse.html on how to use it.
 
 One mandatory step will be to add a new distribution flag (example for distribution flag: gaussian). Then you have to extend the function _gpucsl_cli_ 
-(`gpucsl/cli/cli.py`). The main points are error checking for new parameters you introduced and passing the sanitized values to _the run_on_dataset_ function. 
+(`gpucsl/cli/cli.py`). The main points are error checking for new parameters you introduced, instanciate your implemented subclass of _PC_ and pass the sanitized values to the class by creating it with the general parameters the constructor takes and calling the _set_distribution_specific_options_ method with the distribution specific options as arguments. 
 You do not need to change anything to write the results as done currently.
