@@ -49,6 +49,27 @@ generated_test_data_configs = [
 ]
 
 
+def run_pcalg_if_needed(current_dir: str, dataset_dir: str, dataset_name: str):
+    file_endings = [
+        "_graph.gml",
+        "_sepset.txt",
+        "_zMin.txt",
+        "_max.ord.txt",
+        "_n.edgetests.txt",
+        "_pMax.txt",
+    ]
+    files_that_need_to_be_existent = [
+        f"{dataset_dir}/pcalg_{dataset_name}{file_ending}"
+        for file_ending in file_endings
+    ]
+
+    if not all([os.path.isfile(file) for file in files_that_need_to_be_existent]):
+        os.system(
+            f"cd {current_dir}/../.. && ./scripts/use_pcalg_gaussian.R {dataset_name}"
+        )
+        os.system(f"cd {current_dir}")
+
+
 def generate_input_data_and_results_if_needed(
     manm_cs_parameters: str, write_gpucsl=False
 ):
@@ -65,11 +86,7 @@ def generate_input_data_and_results_if_needed(
         print(generate_command)
         os.system(generate_command)
 
-    if not os.path.isfile(f"{dataset_dir}/pcalg_{dataset_name}_graph.gml"):
-        os.system(
-            f"cd {current_dir}/../.. && ./scripts/use_pcalg_gaussian.R {dataset_name}"
-        )
-        os.system(f"cd {current_dir}")
+    run_pcalg_if_needed(current_dir, dataset_dir, dataset_name)
 
     if not os.path.isfile(f"{dataset_dir}/.gitignore"):
         os.system(f'echo "*" > {dataset_dir}/.gitignore')
