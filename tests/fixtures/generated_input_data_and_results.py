@@ -48,9 +48,20 @@ generated_test_data_configs = [
     )
 ]
 
+
 def run_pcalg_if_needed(current_dir: str, dataset_dir: str, dataset_name: str):
-    file_endings = ["_graph.gml", "_sepset.txt", "_zMin.txt", "_max.ord.txt", "_n.edgetests.txt", "pMax.txt"]
-    files_that_need_to_be_existent = [f"{dataset_dir}/pcalg_{dataset_name}{file_ending}" for file_ending in file_endings]
+    file_endings = [
+        "_graph.gml",
+        "_sepset.txt",
+        "_zMin.txt",
+        "_max.ord.txt",
+        "_n.edgetests.txt",
+        "pMax.txt",
+    ]
+    files_that_need_to_be_existent = [
+        f"{dataset_dir}/pcalg_{dataset_name}{file_ending}"
+        for file_ending in file_endings
+    ]
 
     if not all([os.path.isfile(file) for file in files_that_need_to_be_existent]):
         os.system(
